@@ -1,7 +1,7 @@
 <div class="container">
   <div class="options">
-    <h1> {{ positions.length }}x{{ positions.length }} Chess Board </h1>
-    <mat-slider #boardSize min="8" max="20" step="1" thumbLabel="true" (change)="changeBoardSize(boardSize.value)"></mat-slider>
+    <h1> {{ size }}x{{ size }} Chess Board </h1>
+    <mat-slider #boardSize min="8" max="20" step="1" thumbLabel="true" [value]="size" (change)="changeBoardSize(boardSize.value)"></mat-slider>
   </div>
 </div>
 <div class="board">
@@ -21,12 +21,12 @@
       </div>
       <div class="row">
         <span>Epoch: {{ epochs }}</span>
-        <mat-slider #epoch min="0" [max]="epochs - 1" step="1" thumbLabel="true" [disabled]="viewingSolutions" (change)="epochView(epoch.value)"></mat-slider>
+        <mat-slider #epoch min="0" [max]="epochs - 1" step="1" thumbLabel="true" [disabled]="viewingSolutions" (change)="evolutionView(epoch.value, entity.value)"></mat-slider>
       </div>
 
       <div class="row">
         <span>Entity: {{ entities }}</span>
-        <mat-slider #entity min="0" [max]="entities - 1" step="1" thumbLabel="true" [disabled]="viewingSolutions"></mat-slider>
+        <mat-slider #entity min="0" [max]="entities - 1" step="1" thumbLabel="true" [disabled]="viewingSolutions" (change)="evolutionView(epoch.value, entity.value)"></mat-slider>
       </div>
 
       <div class="row">

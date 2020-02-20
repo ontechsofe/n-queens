@@ -13,19 +13,17 @@ export class HomeComponent implements OnInit {
   subscription: Subscription;
   eventsSubject: Subject<number[]>;
   evolution: Epoch[];
-  positions: number[];
   viewingSolutions: boolean;
-
+  size: number;
   epoch: number;
   solutions: number[];
 
   constructor(private geneticService: GeneticService) {
-    this.evolution = [];
-    this.epoch = 0;
+    this.size = 8;
+    this.reset();
 
     this.viewingSolutions = false;
     this.eventsSubject = new Subject<number[]>();
-    this.positions = Array.from({length: 8}, () => NaN);
   }
 
   ngOnInit(): void {
@@ -38,13 +36,19 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  private reset(): void {
+    this.evolution = [];
+    this.epoch = 0;
+  }
+
   changeView(): void {
     this.viewingSolutions = !this.viewingSolutions;
   }
 
   changeBoardSize(size: number) {
-    this.positions = Array.from({length: size}, () => NaN);
-    this.eventsSubject.next(this.positions);
+    this.size = size;
+    const positions = Array.from({length: this.size}, () => NaN);
+    this.eventsSubject.next(positions);
   }
 
   isSubscribed(): boolean {
@@ -55,14 +59,15 @@ export class HomeComponent implements OnInit {
   }
 
   calculate(): void {
+    this.reset();
     this.geneticService.connect();
     this.subscription = this.geneticService.epoch.subscribe(data => {
       // HANDLE EPOCHS HERE
       this.evolution.push(data.data);
+      // console.log(data.data);
     });
-    const size = this.positions.length;
-    console.log(`Starting calculation with size ${size}`);
-    this.geneticService.calculate(size);
+    console.log(`Starting calculation with size ${this.size}`);
+    this.geneticService.calculate(this.size);
   }
 
   stopSubscription(): void {
@@ -70,8 +75,13 @@ export class HomeComponent implements OnInit {
     this.geneticService.disconnect();
   }
 
-  epochView(epoch: number): void {
-    this.epoch = epoch;
+  evolutionView(epoch: number, entity: number): void {
+    if (this.evolution[this.epoch] !== undefined) {
+      this.epoch = epoch;
+    } else {
+      this.epoch = 0;
+    }
+    this.eventsSubject.next(this.evolution[this.epoch].population[entity]);
   }
 
   get epochs(): number {
@@ -79,8 +89,8 @@ export class HomeComponent implements OnInit {
   }
 
   get entities(): number {
-    if (this.evolution.length > 0) {
-      const epochValues = this.evolution.filter((ep) => ep.epochId === this.epoch )[0];
+    const epochValues = this.evolution.filter((ep) => ep.epochId === this.epoch )[0];
+    if (epochValues) {
       return epochValues.population.length;
     }
     return 0;
