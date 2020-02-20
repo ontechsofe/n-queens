@@ -10,13 +10,22 @@ export class HomeComponent implements OnInit {
 
   eventsSubject: Subject<number[]>;
   positions: number[];
+  viewingSolutions: boolean;
+  epochs: number;
+  entities: number;
+  solutions: number;
 
   constructor() {
+    this.viewingSolutions = true;
     this.eventsSubject = new Subject<number[]>();
     this.positions = Array.from({length: 8}, () => NaN);
   }
 
   ngOnInit(): void {
+  }
+
+  changeView(): void {
+    this.viewingSolutions = !this.viewingSolutions;
   }
 
   changeBoardSize(size: number) {
