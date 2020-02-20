@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.options {
+  width: 40vh;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.options>* {
+  text-align: center;
+  flex: 1 0 100%;
+}
+
+.board {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+.board>button {
+  width: 40vh;
+}
+
+.mat-card {
+  margin: 20px;
+  padding: 0;
+  width: 40vh;
+}
+
+.mat-card-header {
+  padding: 20px 20px 0 20px;
+}
+
+.mat-card-content {
+  padding: 0 20px 20px 20px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}

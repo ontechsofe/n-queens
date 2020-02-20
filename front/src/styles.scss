@@ -1,1 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
+@include mat-core();
+
+$primary: mat-palette($mat-purple);
+$accent:  mat-palette($mat-green, A200, A100, A400);
+$warn: mat-palette($mat-red);
+
+.color-primary {
+  color: mat-color($primary);
+}
+
+.color-accent {
+  color: mat-color($accent);
+}
+
+.background-color {
+  background-color: #303030;
+}
+
+.background-text-color {
+  color: #303030;
+}
+
+.background-color-primary {
+  background-color: mat-color($primary) !important;
+}
+
+.background-color-accent {
+  background-color: mat-color($accent) !important;
+}
+
+.background-color-warn {
+  background-color: mat-color($warn) !important;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: #303030; color: white}

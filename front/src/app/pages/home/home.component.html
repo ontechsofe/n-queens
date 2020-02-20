@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="options">
+    <h1> {{ positions.length }}x{{ positions.length }} Chess Board </h1>
+    <mat-slider #boardSize min="8" max="20" step="1" thumbLabel="true" (change)="changeBoardSize(boardSize.value)"></mat-slider>
+  </div>
+</div>
+<div class="board">
+  <app-board [events]="eventsSubject.asObservable()"></app-board>
+  <button mat-flat-button color="accent"> CALCULATE </button>
+</div>
+<div class="container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title> Options </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row">
+        <span>Viewing: {{ viewingSolutions ? 'Solutions': 'Evolution' }}</span>
+        <mat-slide-toggle color="accent" [checked]="viewingSolutions" (change)="changeView()"></mat-slide-toggle>
+      </div>
+      <div class="row">
+        <span>Epoch: {{ epochs }}</span>
+        <mat-slider #epoch min="0" max="0" step="1" thumbLabel="true" [disabled]="viewingSolutions"></mat-slider>
+      </div>
+
+      <div class="row">
+        <span>Entity: {{ entities }}</span>
+        <mat-slider #entity min="0" max="0" step="1" thumbLabel="true" [disabled]="viewingSolutions"></mat-slider>
+      </div>
+
+      <div class="row">
+        <span>Solution: {{ solutions }}</span>
+        <mat-slider #solution min="0" max="0" step="1" thumbLabel="true" [disabled]="!viewingSolutions"></mat-slider>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
