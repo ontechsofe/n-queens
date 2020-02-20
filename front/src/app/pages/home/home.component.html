@@ -1,1 +1,10 @@
-<p>home works!</p>
+<div class="container">
+  <div class="options">
+    <h1> {{ positions.length }}x{{ positions.length }} Chess Board </h1>
+    <mat-slider #boardSize min="8" max="20" step="1" thumbLabel="true" (change)="changeBoardSize(boardSize.value)"></mat-slider>
+  </div>
+</div>
+<div class="board">
+  <app-board [events]="eventsSubject.asObservable()"></app-board>
+  <button mat-flat-button color="accent"> CALCULATE </button>
+</div>
