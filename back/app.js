@@ -12,10 +12,11 @@ const socketServer = socket => {
         console.log("Starting Genetic Algorithm.");
         let evolution = new Evolution(100, size);
         connected = setInterval(() => {
+            evolution.calculateFitness();
             let data = {
                 epochId: evolution.getEpoch(),
                 population: evolution.getGeneCodes(),
-                solutions: []
+                solutions: evolution.getEpochSolutions()
             };
             socket.emit('epoch', {
                 data: data,

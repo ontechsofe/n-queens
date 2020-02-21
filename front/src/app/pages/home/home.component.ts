@@ -16,7 +16,6 @@ export class HomeComponent implements OnInit {
   viewingSolutions: boolean;
   size: number;
   epoch: number;
-  solutions: number[];
 
   constructor(private geneticService: GeneticService) {
     this.size = 8;
@@ -84,6 +83,12 @@ export class HomeComponent implements OnInit {
     this.eventsSubject.next(this.evolution[this.epoch].population[entity]);
   }
 
+  solutionsView(solution: number): void {
+    if (this.solutions.length > 0 && this.solutions[solution]) {
+      this.eventsSubject.next(this.solutions[solution]);
+    }
+  }
+
   get epochs(): number {
     return this.evolution.length;
   }
@@ -94,5 +99,21 @@ export class HomeComponent implements OnInit {
       return epochValues.population.length;
     }
     return 0;
+  }
+
+  get solutions(): number[][] {
+    const flatSolutions = [];
+    const allSolutions = this.evolution.map(epoch => epoch.solutions);
+    allSolutions.forEach(epochSol => {
+      epochSol.forEach(sol => {
+        flatSolutions.push(sol);
+      });
+    });
+    return flatSolutions;
+  }
+
+  get numSolutions(): number {
+    const solutionsLengths = this.evolution.map(epoch => epoch.solutions.length);
+    return solutionsLengths.reduce((a, b) => a + b, 0);
   }
 }

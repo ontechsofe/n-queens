@@ -30,8 +30,8 @@
       </div>
 
       <div class="row">
-        <span>Solution: {{ solutions }}</span>
-        <mat-slider #solution min="0" max="0" step="1" thumbLabel="true" [disabled]="!viewingSolutions"></mat-slider>
+        <span>Solution: {{ numSolutions }}</span>
+        <mat-slider #solution min="0" [max]="numSolutions - 1" step="1" thumbLabel="true" [disabled]="!viewingSolutions" (change)="solutionsView(solution.value)"></mat-slider>
       </div>
     </mat-card-content>
   </mat-card>

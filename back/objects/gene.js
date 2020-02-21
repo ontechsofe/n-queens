@@ -2,10 +2,13 @@ module.exports = class Gene {
 
     size;
     code;
+    scaledFitness;
+    individualFitness;
 
     constructor(size) {
         this.size = size;
         this.code = this.initGene();
+        this.individualFitness = size;
     }
 
     getInstructions() {
@@ -21,8 +24,37 @@ module.exports = class Gene {
     }
 
     initGene() {
-        let shuffled = this.shuffle(Array.from({length: this.size}, (v, i) => i));
+        return this.shuffle(Array.from({length: this.size}, (v, i) => i));
+    }
 
-        return new Set(shuffled);
+    getIndividualFitness() {
+        return this.individualFitness;
+    }
+
+    getScaledFitness() {
+        return this.scaledFitness;
+    }
+
+    setScaledFitness(fitness) {
+        this.scaledFitness = fitness;
+    }
+
+    calculateFitness() {
+        // 0 is a solution. Higher fitness is worse.
+        let fitness = 0;
+        for (let i = 0; i < this.size; i++) {
+            let diagonalUp = this.getInstructions()[i] + 1;
+            let diagonalDown = this.getInstructions()[i] - 1;
+            for (let j = i+1; j < this.size; j++) {
+                if (this.getInstructions()[j] === diagonalUp) {
+                    fitness += 1;
+                } else if (this.getInstructions()[j] === diagonalDown) {
+                    fitness += 1;
+                }
+                diagonalUp += 1;
+                diagonalDown -= 1;
+            }
+        }
+        this.individualFitness = fitness;
     }
 };
