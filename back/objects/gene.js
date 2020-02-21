@@ -3,12 +3,12 @@ module.exports = class Gene {
     size;
     code;
     scaledFitness;
-    individualFitness;
+    numMistakes;
 
     constructor(size) {
         this.size = size;
         this.code = this.initGene();
-        this.individualFitness = size;
+        this.numMistakes = size;
     }
 
     getInstructions() {
@@ -27,8 +27,8 @@ module.exports = class Gene {
         return this.shuffle(Array.from({length: this.size}, (v, i) => i));
     }
 
-    getIndividualFitness() {
-        return this.individualFitness;
+    getNumMistakes() {
+        return this.numMistakes;
     }
 
     getScaledFitness() {
@@ -39,7 +39,7 @@ module.exports = class Gene {
         this.scaledFitness = fitness;
     }
 
-    calculateFitness() {
+    calculateMistakes() {
         // 0 is a solution. Higher fitness is worse.
         let fitness = 0;
         for (let i = 0; i < this.size; i++) {
@@ -55,6 +55,6 @@ module.exports = class Gene {
                 diagonalDown -= 1;
             }
         }
-        this.individualFitness = fitness;
+        this.numMistakes = fitness;
     }
 };

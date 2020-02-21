@@ -12,7 +12,8 @@ const socketServer = socket => {
         console.log("Starting Genetic Algorithm.");
         let evolution = new Evolution(100, size);
         connected = setInterval(() => {
-            evolution.calculateFitness();
+            // evolution.calculateFitness();
+            evolution.newEpoch();
             let data = {
                 epochId: evolution.getEpoch(),
                 population: evolution.getGeneCodes(),
@@ -22,8 +23,9 @@ const socketServer = socket => {
                 data: data,
                 success: true
             });
-            evolution.newEpoch();
-        }, 100);
+            evolution.epoch += 1;
+            // evolution.newEpoch();
+        }, 0.00001);
     });
 
     socket.on('disconnect', () => {
