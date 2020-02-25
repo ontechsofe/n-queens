@@ -1,7 +1,7 @@
 <div class="container">
   <div class="options">
     <h1> {{ size }}x{{ size }} Chess Board </h1>
-    <mat-slider #boardSize min="1" max="25" step="1" thumbLabel="true" [value]="size" (change)="changeBoardSize(boardSize.value)"></mat-slider>
+    <mat-slider #boardSize min="2" max="15" step="1" thumbLabel="true" [value]="size" (change)="changeBoardSize(boardSize.value)"></mat-slider>
   </div>
 </div>
 <div class="board">

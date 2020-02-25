@@ -5,14 +5,10 @@ module.exports = class Gene {
     scaledFitness;
     numMistakes;
 
-    constructor(size) {
+    constructor(size, instructions=null) {
         this.size = size;
-        this.code = this.initGene();
+        this.code = instructions || this.initGene();
         this.numMistakes = size;
-    }
-
-    getInstructions() {
-        return this.code;
     }
 
     shuffle(a) {
@@ -25,6 +21,14 @@ module.exports = class Gene {
 
     initGene() {
         return this.shuffle(Array.from({length: this.size}, (v, i) => i));
+    }
+
+    getInstructions() {
+        return this.code;
+    }
+
+    setInstructions(instructions) {
+        this.code = instructions;
     }
 
     getNumMistakes() {

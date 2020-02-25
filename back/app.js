@@ -10,9 +10,11 @@ const socketServer = socket => {
     let connected;
     socket.on('calculate', size => {
         console.log("Starting Genetic Algorithm.");
-        let evolution = new Evolution(100, size);
+        let populationSize = Math.floor(Math.pow(1.7, size));
+        populationSize = populationSize >= 20 ? populationSize : 20;
+        let evolution = new Evolution(populationSize, size);
+
         connected = setInterval(() => {
-            // evolution.calculateFitness();
             evolution.newEpoch();
             let data = {
                 epochId: evolution.getEpoch(),
@@ -22,9 +24,7 @@ const socketServer = socket => {
             socket.emit('epoch', {
                 data: data,
                 success: true
-            });
-            evolution.epoch += 1;
-            // evolution.newEpoch();
+            })
         }, 0.00001);
     });
 
