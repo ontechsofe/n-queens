@@ -10,7 +10,7 @@ const socketServer = socket => {
     let connected;
     socket.on('calculate', size => {
         console.log("Starting Genetic Algorithm.");
-        let populationSize = Math.floor(Math.pow(1.7, size));
+        let populationSize = Math.floor(Math.pow(1.6, size));
         populationSize = populationSize >= 20 ? populationSize : 20;
         let evolution = new Evolution(populationSize, size);
 
@@ -21,11 +21,12 @@ const socketServer = socket => {
                 population: evolution.getGeneCodes(),
                 solutions: evolution.getEpochSolutions()
             };
+            evolution.epoch += 1;
             socket.emit('epoch', {
                 data: data,
                 success: true
             })
-        }, 0.00001);
+        });
     });
 
     socket.on('disconnect', () => {

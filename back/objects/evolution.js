@@ -47,8 +47,17 @@ class Evolution {
 
     addSolution(solution) {
         if (!this.getAllSolutions().map(s => s.join('')).includes(solution.join(''))) {
-            this.epochSolutions.push(solution);
-            this.allSolutions.push(solution);
+            this.epochSolutions.push(solution.slice());
+            this.allSolutions.push(solution.slice());
+
+            // Horizontal Flip
+            this.addSolution(solution.map(pos => this.geneSize - pos - 1));
+            // Vertical Flip
+            this.addSolution(solution.reverse());
+            // Horizontal Flip again
+            this.addSolution(solution.map(pos => this.geneSize - pos - 1));
+            // Vertical Flip again
+            this.addSolution(solution.reverse());
         }
     }
 
@@ -59,7 +68,7 @@ class Evolution {
         this.population.forEach(g => {
             if (g.getNumMistakes() === 0) {
                 this.addSolution(g.getInstructions());
-                g.setScaledFitness(0.5);
+                g.setScaledFitness(0.2);
             } else {
                 let fitness = (maximum - g.getNumMistakes()) / (maximum * 1.5);
                 g.setScaledFitness(fitness);
@@ -107,7 +116,7 @@ class Evolution {
     }
 
     mutation() {
-        const mutationRate = 1;
+        const mutationRate = 0.1;
         this.population.forEach(g => {
             if (g.getNumMistakes() !== 0 && mutationRate > Math.random()) {
                 g.setInstructions(this.swapTwo(g.getInstructions()));
