@@ -1,5 +1,6 @@
 import * as express from "express";
 import {Socket} from 'socket.io';
+import {Nature} from './evolution/nature';
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -14,17 +15,10 @@ io.on("connection", (socket: Socket) => {
     socket.on('calculate', (chromosomeSize: number) => {
         console.log(`Client requesting evolution of chromosome size ${chromosomeSize}\nStarting evolution...`);
         const populationSize: number = Math.floor(Math.pow(1.6, chromosomeSize));
-        let num: number = 0;
-        let empty: number[][] = [];
+        const nature = new Nature(populationSize, chromosomeSize);
         evolution = setInterval(() => {
-            let data = {
-                epochId: num++,
-                population: empty,
-                solutions: empty
-            };
-            console.log('hi');
             socket.emit('epoch', {
-                data: data,
+                data: nature.getEpochData(),
                 success: true
             })
         })
