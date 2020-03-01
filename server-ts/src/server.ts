@@ -17,11 +17,12 @@ io.on("connection", (socket: Socket) => {
         const populationSize: number = Math.floor(Math.pow(1.6, chromosomeSize));
         const nature = new Nature(populationSize, chromosomeSize);
         evolution = setInterval(() => {
+            nature.run();
             socket.emit('epoch', {
                 data: nature.getEpochData(),
                 success: true
-            })
-        })
+            });
+        });
     });
 
     socket.on('disconnect', () => {

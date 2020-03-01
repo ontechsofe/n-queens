@@ -15,11 +15,18 @@ export class Nature {
         this.population = new Population(populationSize, chromosomeSize);
     }
 
+    public run(): void {
+        this.population.epochSolutions = [];
+        this.population.calculateFitness();
+        this.population.naturalSelection();
+        this.population.crossover();
+    }
+
     public getEpochData(): EpochData {
         return {
             epochId: this.epoch++,
-            population: [],
-            solutions: []
+            population: this.population.instructionSet,
+            solutions: this.population.epochSolutions
         };
     }
 }
