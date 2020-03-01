@@ -1,25 +1,41 @@
 import * as express from "express";
-import * as socketio from "socket.io";
-import * as path from "path";
+import {Socket} from 'socket.io';
 
+const PORT = process.env.PORT || 5000;
 const app = express();
-app.set("port", process.env.PORT || 3000);
+app.set('port', PORT);
 
-let http = require("http").Server(app);
-// set up socket.io and bind it to our
-// http server.
-let io = require("socket.io")(http);
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 
-app.get("/", (req: any, res: any) => {
-    res.sendFile(path.resolve("./client/index.html"));
+io.on("connection", (socket: Socket) => {
+    console.log(`A new client connected. ID: ${socket.id}`);
+    let evolution: number;
+    socket.on('calculate', (chromosomeSize: number) => {
+        console.log(`Client requesting evolution of chromosome size ${chromosomeSize}\nStarting evolution...`);
+        const populationSize: number = Math.floor(Math.pow(1.6, chromosomeSize));
+        let num: number = 0;
+        let empty: number[][] = [];
+        evolution = setInterval(() => {
+            let data = {
+                epochId: num++,
+                population: empty,
+                solutions: empty
+            };
+            console.log('hi');
+            socket.emit('epoch', {
+                data: data,
+                success: true
+            })
+        })
+    });
+
+    socket.on('disconnect', () => {
+        console.log(`A client disconnected. ID: ${socket.id}`);
+        if (evolution) { clearInterval(evolution); }
+    });
 });
 
-// whenever a user connects on port 3000 via
-// a websocket, log that a user has connected
-io.on("connection", function(socket: any) {
-    console.log("a user connected");
-});
-
-const server = http.listen(3000, function() {
-    console.log("listening on *:3000");
+http.listen(PORT, () => {
+    console.log(`listening on *:${PORT}`);
 });
