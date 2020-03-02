@@ -64,6 +64,7 @@ export class HomeComponent implements OnInit {
   }
 
   stopSubscription(): void {
+    console.log(this.solutions);
     this.subscription.unsubscribe();
     this.geneticService.disconnect();
   }
