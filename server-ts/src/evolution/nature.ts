@@ -16,10 +16,11 @@ export class Nature {
     }
 
     public run(): void {
-        this.population.epochSolutions = [];
+        this.population.reset();
         this.population.calculateFitness();
         this.population.naturalSelection();
-        this.population.crossover();
+        this.population.breeding();
+        this.population.mutation();
     }
 
     public getEpochData(): EpochData {

@@ -6,10 +6,10 @@ export class Chromosome {
     private _numberOfCollisions: number;
     private _fitness: number;
 
-    constructor(chromosomeSize: number) {
+    constructor(chromosomeSize: number, instructions: number[]=null) {
         this.size = chromosomeSize;
         this.isSolution = false;
-        this.initInstructions(chromosomeSize);
+        this.instructions = instructions || Chromosome.initInstructions(chromosomeSize);
         this.shuffleInstructions();
     }
 
@@ -35,10 +35,10 @@ export class Chromosome {
         }
     }
 
-    private initInstructions(chromosomeSize: number): void {
-        this.instructions = Array<number>(chromosomeSize)
-                                .fill(null)
-                                .map((v, index) => index);
+    private static initInstructions(chromosomeSize: number): number[] {
+        return Array<number>(chromosomeSize)
+                .fill(null)
+                .map((v, index) => index);
     }
 
     public calculateCollisions(): void {

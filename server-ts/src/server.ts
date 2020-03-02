@@ -11,10 +11,13 @@ const io = require('socket.io')(http);
 
 io.on("connection", (socket: Socket) => {
     console.log(`A new client connected. ID: ${socket.id}`);
+    socket.emit('connected', { success: true });
+
     let evolution: number;
     socket.on('calculate', (chromosomeSize: number) => {
-        console.log(`Client requesting evolution of chromosome size ${chromosomeSize}\nStarting evolution...`);
-        const populationSize: number = Math.floor(Math.pow(1.6, chromosomeSize));
+        console.log(`Client ${socket.id} requesting evolution of chromosome size ${chromosomeSize}`);
+        console.log('Starting evolution...');
+        const populationSize: number = Math.floor(Math.pow(1.7, chromosomeSize));
         const nature = new Nature(populationSize, chromosomeSize);
         evolution = setInterval(() => {
             nature.run();
@@ -26,8 +29,11 @@ io.on("connection", (socket: Socket) => {
     });
 
     socket.on('disconnect', () => {
+        if (evolution) {
+            console.log('Stopping evolution...');
+            clearInterval(evolution);
+        }
         console.log(`A client disconnected. ID: ${socket.id}`);
-        if (evolution) { clearInterval(evolution); }
     });
 });
 
