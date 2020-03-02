@@ -57,19 +57,6 @@ export class Population {
         }
     }
 
-    private crossover(mommy: Chromosome, daddy: Chromosome): [Chromosome, Chromosome] {
-        mommy = mommy ? mommy : new Chromosome(this.chromosomeSize);
-        daddy = daddy ? daddy : new Chromosome(this.chromosomeSize);
-        const momInstructions = mommy.instructions.slice();
-        const dadInstructions = daddy.instructions.slice();
-        const splicePoint = ArrayHelper.randomIndex(mommy.instructions);
-        const rightSliceMommy = momInstructions.slice(splicePoint);
-        const rightSliceDaddy = dadInstructions.slice(splicePoint);
-        const oldest = momInstructions.filter(pos => !rightSliceMommy.includes(pos)).concat(rightSliceMommy);
-        const youngest = dadInstructions.filter(pos => !rightSliceDaddy.includes(pos)).concat(rightSliceDaddy);
-        return [new Chromosome(this.chromosomeSize, oldest), new Chromosome(this.chromosomeSize, youngest)]
-    }
-
     public reset(): void {
         this.epochSolutions = [];
         this.chromosomes.forEach(chromosome => chromosome.isSolution = false);
@@ -102,6 +89,19 @@ export class Population {
         if (this.chromosomes.length > this.size) {
             this.chromosomes.pop();
         }
+    }
+
+    private crossover(mommy: Chromosome, daddy: Chromosome): [Chromosome, Chromosome] {
+        mommy = mommy ? mommy : new Chromosome(this.chromosomeSize);
+        daddy = daddy ? daddy : new Chromosome(this.chromosomeSize);
+        const momInstructions = mommy.instructions.slice();
+        const dadInstructions = daddy.instructions.slice();
+        const splicePoint = ArrayHelper.randomIndex(mommy.instructions);
+        const rightSliceMommy = momInstructions.slice(splicePoint);
+        const rightSliceDaddy = dadInstructions.slice(splicePoint);
+        const oldest = momInstructions.filter(pos => !rightSliceMommy.includes(pos)).concat(rightSliceMommy);
+        const youngest = dadInstructions.filter(pos => !rightSliceDaddy.includes(pos)).concat(rightSliceDaddy);
+        return [new Chromosome(this.chromosomeSize, oldest), new Chromosome(this.chromosomeSize, youngest)]
     }
 
     public mutation(): void {
