@@ -12,7 +12,7 @@ export class ArrayHelper {
     public static swapTwoElements(arr: any[]): any[] {
         const firstElementIndex: number = ArrayHelper.randomIndex(arr);
         const secondElementIndex: number = ArrayHelper.randomIndex(arr);
-        let temp = arr[firstElementIndex];
+        const temp = arr[firstElementIndex];
         arr[firstElementIndex] = arr[secondElementIndex];
         arr[secondElementIndex] = temp;
         return arr;
