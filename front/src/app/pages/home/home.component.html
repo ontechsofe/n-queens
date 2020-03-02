@@ -1,12 +1,13 @@
 <div class="container">
   <div class="options">
-    <h1> {{ positions.length }}x{{ positions.length }} Chess Board </h1>
-    <mat-slider #boardSize min="8" max="20" step="1" thumbLabel="true" (change)="changeBoardSize(boardSize.value)"></mat-slider>
+    <h1> {{ size }}x{{ size }} Chess Board </h1>
+    <mat-slider #boardSize min="2" max="15" step="1" thumbLabel="true" [value]="size" (change)="changeBoardSize(boardSize.value)"></mat-slider>
   </div>
 </div>
 <div class="board">
   <app-board [events]="eventsSubject.asObservable()"></app-board>
-  <button mat-flat-button color="accent"> CALCULATE </button>
+  <button mat-flat-button color="accent" (click)="calculate()" *ngIf="!isSubscribed(); else stop"> CALCULATE </button>
+  <ng-template #stop><button mat-flat-button color="warn" (click)="stopSubscription()"> STOP </button></ng-template>
 </div>
 <div class="container">
   <mat-card>
@@ -20,17 +21,17 @@
       </div>
       <div class="row">
         <span>Epoch: {{ epochs }}</span>
-        <mat-slider #epoch min="0" max="0" step="1" thumbLabel="true" [disabled]="viewingSolutions"></mat-slider>
+        <mat-slider #epoch min="0" [max]="epochs - 1" step="1" thumbLabel="true" [disabled]="viewingSolutions" (change)="evolutionView(epoch.value, entity.value)"></mat-slider>
       </div>
 
       <div class="row">
         <span>Entity: {{ entities }}</span>
-        <mat-slider #entity min="0" max="0" step="1" thumbLabel="true" [disabled]="viewingSolutions"></mat-slider>
+        <mat-slider #entity min="0" [max]="entities - 1" step="1" thumbLabel="true" [disabled]="viewingSolutions" (change)="evolutionView(epoch.value, entity.value)"></mat-slider>
       </div>
 
       <div class="row">
-        <span>Solution: {{ solutions }}</span>
-        <mat-slider #solution min="0" max="0" step="1" thumbLabel="true" [disabled]="!viewingSolutions"></mat-slider>
+        <span>Solutions: {{ numSolutions }}</span>
+        <mat-slider #solution min="0" [max]="numSolutions - 1" step="1" thumbLabel="true" [disabled]="!viewingSolutions" (change)="solutionsView(solution.value)"></mat-slider>
       </div>
     </mat-card-content>
   </mat-card>

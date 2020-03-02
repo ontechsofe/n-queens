@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {Subject} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
+import {GeneticService} from '../../services/genetic.service';
+import {Epoch} from '../../types/genetic-evolution';
 
 @Component({
   selector: 'app-home',
@@ -8,20 +10,34 @@ import {Subject} from 'rxjs';
 })
 export class HomeComponent implements OnInit {
 
+  subscription: Subscription;
   eventsSubject: Subject<number[]>;
-  positions: number[];
+  evolution: Epoch[];
   viewingSolutions: boolean;
-  epochs: number;
-  entities: number;
-  solutions: number;
+  size: number;
+  epoch: number;
 
-  constructor() {
-    this.viewingSolutions = true;
+  constructor(private geneticService: GeneticService) {
+    this.size = 8;
+    this.reset();
+
+    this.viewingSolutions = false;
     this.eventsSubject = new Subject<number[]>();
-    this.positions = Array.from({length: 8}, () => NaN);
   }
 
   ngOnInit(): void {
+    this.geneticService.confirmation.subscribe(data => {
+      if (data.success) {
+        console.log('Connected to socket!');
+      } else {
+        console.log('Something went wrong when connecting to socket!');
+      }
+    });
+  }
+
+  private reset(): void {
+    this.evolution = [];
+    this.epoch = 0;
   }
 
   changeView(): void {
@@ -29,8 +45,75 @@ export class HomeComponent implements OnInit {
   }
 
   changeBoardSize(size: number) {
-    this.positions = Array.from({length: size}, () => NaN);
-    // this.positions = Array.from({length: parseInt(size, 10)}, (v, i) => NaN);
-    this.eventsSubject.next(this.positions);
+    this.size = size;
+    const positions = Array.from({length: this.size}, () => NaN);
+    this.eventsSubject.next(positions);
+  }
+
+  isSubscribed(): boolean {
+    if (!this.subscription) {
+      return false;
+    }
+    return !this.subscription.closed;
+  }
+
+  calculate(): void {
+    this.reset();
+    this.geneticService.connect();
+    this.subscription = this.geneticService.epoch.subscribe(data => {
+      // HANDLE EPOCHS HERE
+      this.evolution.push(data.data);
+      // console.log(data.data);
+    });
+    console.log(`Starting calculation with size ${this.size}`);
+    this.geneticService.calculate(this.size);
+  }
+
+  stopSubscription(): void {
+    this.subscription.unsubscribe();
+    this.geneticService.disconnect();
+  }
+
+  evolutionView(epoch: number, entity: number): void {
+    if (this.evolution[this.epoch] !== undefined) {
+      this.epoch = epoch;
+    } else {
+      this.epoch = 0;
+    }
+    this.eventsSubject.next(this.evolution[this.epoch].population[entity]);
+  }
+
+  solutionsView(solution: number): void {
+    if (this.solutions.length > 0 && this.solutions[solution]) {
+      this.eventsSubject.next(this.solutions[solution]);
+    }
+  }
+
+  get epochs(): number {
+    return this.evolution.length;
+  }
+
+  get entities(): number {
+    const epochValues = this.evolution.filter((ep) => ep.epochId === this.epoch )[0];
+    if (epochValues) {
+      return epochValues.population.length;
+    }
+    return 0;
+  }
+
+  get solutions(): number[][] {
+    const flatSolutions = [];
+    const allSolutions = this.evolution.map(epoch => epoch.solutions);
+    allSolutions.forEach(epochSol => {
+      epochSol.forEach(sol => {
+        flatSolutions.push(sol);
+      });
+    });
+    return flatSolutions;
+  }
+
+  get numSolutions(): number {
+    const solutionsLengths = this.evolution.map(epoch => epoch.solutions.length);
+    return solutionsLengths.reduce((a, b) => a + b, 0);
   }
 }
