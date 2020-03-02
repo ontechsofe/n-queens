@@ -13,7 +13,6 @@ export class HomeComponent implements OnInit {
   subscription: Subscription;
   eventsSubject: Subject<number[]>;
   evolution: Epoch[];
-  viewingSolutions: boolean;
   size: number;
   epoch: number;
 
@@ -21,7 +20,6 @@ export class HomeComponent implements OnInit {
     this.size = 8;
     this.reset();
 
-    this.viewingSolutions = false;
     this.eventsSubject = new Subject<number[]>();
   }
 
@@ -38,10 +36,6 @@ export class HomeComponent implements OnInit {
   private reset(): void {
     this.evolution = [];
     this.epoch = 0;
-  }
-
-  changeView(): void {
-    this.viewingSolutions = !this.viewingSolutions;
   }
 
   changeBoardSize(size: number) {
@@ -75,7 +69,9 @@ export class HomeComponent implements OnInit {
   }
 
   evolutionView(epoch: number, entity: number): void {
-    if (this.evolution[this.epoch] !== undefined) {
+    --epoch;
+    --entity;
+    if (this.evolution[epoch] !== undefined) {
       this.epoch = epoch;
     } else {
       this.epoch = 0;
@@ -84,6 +80,7 @@ export class HomeComponent implements OnInit {
   }
 
   solutionsView(solution: number): void {
+    --solution;
     if (this.solutions.length > 0 && this.solutions[solution]) {
       this.eventsSubject.next(this.solutions[solution]);
     }

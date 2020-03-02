@@ -16,22 +16,18 @@
     </mat-card-header>
     <mat-card-content>
       <div class="row">
-        <span>Viewing: {{ viewingSolutions ? 'Solutions': 'Evolution' }}</span>
-        <mat-slide-toggle color="accent" [checked]="viewingSolutions" (change)="changeView()"></mat-slide-toggle>
-      </div>
-      <div class="row">
         <span>Epoch: {{ epochs }}</span>
-        <mat-slider #epoch min="0" [max]="epochs - 1" step="1" thumbLabel="true" [disabled]="viewingSolutions" (change)="evolutionView(epoch.value, entity.value)"></mat-slider>
+        <mat-slider #epoch min="1" [max]="epochs" step="1" thumbLabel="true" (change)="evolutionView(epoch.value, entity.value)"></mat-slider>
       </div>
 
       <div class="row">
         <span>Entity: {{ entities }}</span>
-        <mat-slider #entity min="0" [max]="entities - 1" step="1" thumbLabel="true" [disabled]="viewingSolutions" (change)="evolutionView(epoch.value, entity.value)"></mat-slider>
+        <mat-slider #entity min="1" [max]="entities" step="1" thumbLabel="true" (change)="evolutionView(epoch.value, entity.value)"></mat-slider>
       </div>
 
       <div class="row">
         <span>Solutions: {{ numSolutions }}</span>
-        <mat-slider #solution min="0" [max]="numSolutions - 1" step="1" thumbLabel="true" [disabled]="!viewingSolutions" (change)="solutionsView(solution.value)"></mat-slider>
+        <mat-slider #solution color="primary" min="1" [max]="numSolutions" step="1" thumbLabel="true" (change)="solutionsView(solution.value)"></mat-slider>
       </div>
     </mat-card-content>
   </mat-card>
